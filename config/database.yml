@@ -1,0 +1,33 @@
+# MySQL
+#   gem install mysql2
+#
+#   Ensure the mysql2 gem is defined in your Gemfile
+#   gem "mysql2"
+#
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  username: <%= ENV.fetch("MYSQL_USERNAME") { 'sleepa' } %>
+  password: <%= ENV.fetch("MYSQL_PASSWORD") { 'sleepa' } %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 10 } %>
+  host: <%= ENV.fetch('MYSQL_HOST') { '127.0.0.1' } %>
+  port: <%= ENV.fetch('MYSQL_PORT') { '3307' } %>
+
+development:
+  <<: *default
+  database: sleepa_test
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  database: sleepa_test
+
+
+# Store production database in the storage/ directory, which by default
+# is mounted as a persistent Docker volume in config/deploy.yml.
+production:
+  primary:
+    <<: *default
+    database: sleepa_production
