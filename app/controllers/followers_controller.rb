@@ -1,51 +1,51 @@
 class FollowersController < ApplicationController
-  before_action :set_follower, only: %i[ show update destroy ]
+  before_action :set_follower, only: %i[ show delete ]
+  rescue_from StandardError, with: :handle_internal_server_error
 
   # GET /followers
+  # Get a user's follower list
   def index
-    @followers = Follower.all
-
-    render json: @followers
+    render json: Follower.get_followers(params.expect(:user_id))
   end
 
-  # GET /followers/1
+  # GET /followers/:id
+  # Get follower detail
   def show
     render json: @follower
   end
 
-  # POST /followers
+  # GET /followers/followings
+  # Get a user's following list
+  def followings
+    render json: Follower.get_user_followings(params.expect(:user_id))
+  end
+
+  # POST /followers/follow
+  # Follow a user
+  # Rqeuest body params:
+  # user_id bigint
+  # follower_user_id bigint
   def create
-    @follower = Follower.new(follower_params)
-
-    if @follower.save
-      render json: @follower, status: :created, location: @follower
-    else
-      render json: @follower.errors, status: :unprocessable_entity
-    end
+    render json: Follower.follow(params.expect(:user_id), params.expect(:follower_user_id)), status: :created
   end
 
-  # PATCH/PUT /followers/1
-  def update
-    if @follower.update(follower_params)
+  # DELETE /followers/unfollow/:id
+  # Unfollow a user
+  def delete
+    if @follower.unfollow
       render json: @follower
-    else
-      render json: @follower.errors, status: :unprocessable_entity
     end
-  end
-
-  # DELETE /followers/1 - should be unfollow
-  def destroy
-    @follower.destroy!
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_follower
       @follower = Follower.find(params.expect(:id))
     end
 
-    # Only allow a list of trusted parameters through.
-    def follower_params
-      params.expect(follower: [ :user_id, :follower_user_id, :followed_at, :is_active ])
+    def handle_internal_server_error(exception)
+      error_log = "Internal Server Error: #{exception.message}\nBacktrace:\n#{exception.backtrace.join("\n")}"
+      Rails.logger.error(error_log)
+
+      render json: { error: 'Internal server error'}, status: :internal_server_error
     end
 end
