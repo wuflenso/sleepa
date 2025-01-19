@@ -129,12 +129,23 @@ RSpec.describe FollowersController, type: :controller do
       end
     end
 
+    context 'when encounter record invalid error' do
+      before do
+        allow(Follower).to receive(:follow).with(anything, anything).and_raise(ActiveRecord::RecordInvalid)
+      end
+
+      it 'return unprocessable entity error' do
+        subject
+        expect(response).to have_http_status(422)
+      end
+    end
+
     context 'when encounter unexpected error' do
       before do
         allow(Follower).to receive(:follow).with(anything, anything).and_raise(StandardError)
       end
 
-      it 'success create and does not return error' do
+      it 'returns internal server error' do
         subject
         expect(response).to have_http_status(500)
       end
