@@ -8,10 +8,10 @@ class FollowersController < ApplicationController
     render json: Follower.get_followers(params.expect(:user_id))
   end
 
-  # GET /followers?user_id=:user_id
-  # Get follower detail
+  # GET /followers/details?id=:id
+  # Get follower details
   def show
-    render json: @follower if @follower
+    return render json: @follower unless @follower.nil?
     render json: { message: 'Record not found'}, status: :not_found
   end
 
