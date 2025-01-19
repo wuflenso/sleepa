@@ -64,6 +64,16 @@ RSpec.describe Follower, type: :model do
         expect(follower.is_active).to eq(true)
       end
     end
+
+    context 'when user already followed' do
+      before do
+        allow(Follower).to receive(:get_follower_details).with(user_id, follower_user_id).and_return(subject)
+      end
+
+      it 'raise error' do
+        expect{ Follower.follow(user_id, follower_user_id) }.to raise_error(StandardError)
+      end
+    end
   end
 
   context '.unfollow' do
