@@ -2,16 +2,17 @@ class FollowersController < ApplicationController
   before_action :set_follower, only: %i[ show delete ]
   rescue_from StandardError, with: :handle_internal_server_error
 
-  # GET /followers
+  # GET /followers?user_id=:user_id
   # Get a user's follower list
   def index
     render json: Follower.get_followers(params.expect(:user_id))
   end
 
-  # GET /followers/:id
+  # GET /followers?user_id=:user_id
   # Get follower detail
   def show
-    render json: @follower
+    render json: @follower if @follower
+    render json: { message: 'Record not found'}, status: :not_found
   end
 
   # GET /followers/followings
@@ -22,7 +23,7 @@ class FollowersController < ApplicationController
 
   # POST /followers/follow
   # Follow a user
-  # Rqeuest body params:
+  # Request body params:
   # user_id bigint
   # follower_user_id bigint
   def create
@@ -39,7 +40,7 @@ class FollowersController < ApplicationController
 
   private
     def set_follower
-      @follower = Follower.find(params.expect(:id))
+      @follower = Follower.find_by_id(params.expect(:id))
     end
 
     def handle_internal_server_error(exception)

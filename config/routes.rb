@@ -13,7 +13,8 @@ Rails.application.routes.draw do
   scope '/api/v1' do
     resources :users
 
-    resources :followers, path: 'followers', only: [:index, :show] do
+    resources :followers, path: 'followers', only: [:index] do
+      get  '/details' => 'followers#show', on: :collection
       get  '/followings' => 'followers#followings', on: :collection
       post  '/follow' => 'followers#create', on: :collection
       delete  '/unfollow' => 'followers#delete', on: :collection

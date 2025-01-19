@@ -11,60 +11,62 @@ RSpec.describe Follower, type: :model do
     allow_any_instance_of(Follower).to receive(:save!).and_return(true)
   end
 
-  context 'when get_followers' do
-    let(:followers) { double('followers') }
-    let(:followers_unordered) { double('followers') }
+  describe 'class methods' do
+    context '.get_followers' do
+      let(:followers) { double('followers') }
+      let(:followers_unordered) { double('followers') }
 
-    it 'success change is_active state to false' do
-      expect(Follower).to receive(:where).with(user_id: user_id).and_return(followers)
-      expect(followers).to receive(:where).with(is_active: true).and_return(followers_unordered)
-      expect(followers_unordered).to receive(:order).with(followed_at: 'desc').and_return([])
+      it 'success get followers' do
+        expect(Follower).to receive(:where).with(user_id: user_id).and_return(followers)
+        expect(followers).to receive(:where).with(is_active: true).and_return(followers_unordered)
+        expect(followers_unordered).to receive(:order).with(followed_at: 'desc').and_return([])
 
-      Follower.get_followers(user_id)
+        Follower.get_followers(user_id)
+      end
+    end
+
+    context '.get_user_followings' do
+      let(:followers) { double('followers') }
+      let(:followers_unordered) { double('followers') }
+
+      it 'success get user followings' do
+        expect(Follower).to receive(:where).with(follower_user_id: follower_user_id).and_return(followers)
+        expect(followers).to receive(:where).with(is_active: true).and_return(followers_unordered)
+        expect(followers_unordered).to receive(:order).with(followed_at: 'desc').and_return([])
+
+        Follower.get_user_followings(follower_user_id)
+      end
+    end
+
+    context '.get_follower_details' do
+      let(:followers) { double('followers') }
+      let(:followers_unfiltered) { double('followers') }
+
+      it 'success get follower details' do
+        expect(Follower).to receive(:where).with(user_id: user_id).and_return(followers)
+        expect(followers).to receive(:where).with(follower_user_id: follower_user_id).and_return(followers_unfiltered)
+        expect(followers_unfiltered).to receive(:where).with(is_active: true).and_return([subject])
+
+        Follower.get_follower_details(user_id, follower_user_id)
+      end
+    end
+
+    context '.follow' do
+      before do
+        allow(Follower).to receive(:get_follower_details).with(user_id, follower_user_id).and_return nil
+      end
+
+      it 'success create followers instance' do
+        follower = Follower.follow(user_id, follower_user_id)
+        expect(follower.user_id).to eq(user_id)
+        expect(follower.follower_user_id).to eq(follower_user_id)
+        expect(follower.followed_at).to be_a(ActiveSupport::TimeWithZone)
+        expect(follower.is_active).to eq(true)
+      end
     end
   end
 
-  context 'when get_user_followings' do
-    let(:followers) { double('followers') }
-    let(:followers_unordered) { double('followers') }
-
-    it 'success change is_active state to false' do
-      expect(Follower).to receive(:where).with(follower_user_id: follower_user_id).and_return(followers)
-      expect(followers).to receive(:where).with(is_active: true).and_return(followers_unordered)
-      expect(followers_unordered).to receive(:order).with(followed_at: 'desc').and_return([])
-
-      Follower.get_user_followings(follower_user_id)
-    end
-  end
-
-  context 'when get_follower_detail' do
-    let(:followers) { double('followers') }
-    let(:followers_unfiltered) { double('followers') }
-
-    it 'success change is_active state to false' do
-      expect(Follower).to receive(:where).with(user_id: user_id).and_return(followers)
-      expect(followers).to receive(:where).with(follower_user_id: follower_user_id).and_return(followers_unfiltered)
-      expect(followers_unfiltered).to receive(:where).with(is_active: true).and_return([subject])
-
-      Follower.get_follower_detail(user_id, follower_user_id)
-    end
-  end
-
-  context 'when follow' do
-    before do
-      allow(Follower).to receive(:get_follower_detail).with(user_id, follower_user_id).and_return nil
-    end
-
-    it 'success change is_active state to false' do
-      follower = Follower.follow(user_id, follower_user_id)
-      expect(follower.user_id).to eq(user_id)
-      expect(follower.follower_user_id).to eq(follower_user_id)
-      expect(follower.followed_at).to be_a(ActiveSupport::TimeWithZone)
-      expect(follower.is_active).to eq(true)
-    end
-  end
-
-  context 'when unfollow' do
+  context '.unfollow' do
     it 'success change is_active state to false' do
       expect(subject.unfollow.is_active).to eq(false)
     end

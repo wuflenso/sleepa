@@ -10,12 +10,12 @@ class Follower < ApplicationRecord
       self.where(follower_user_id: follower_user_id).where(is_active: true)&.order(followed_at: "desc")
     end
 
-    def get_follower_detail(followed_user_id, follower_user_id)
+    def get_follower_details(followed_user_id, follower_user_id)
       self.where(user_id: followed_user_id).where(follower_user_id: follower_user_id).where(is_active: true).first
     end
 
     def follow(followed_user_id, follower_user_id)
-      unless self.get_follower_detail(followed_user_id, follower_user_id).nil?
+      unless self.get_follower_details(followed_user_id, follower_user_id).nil?
         raise StandardError.new("user already followed")
       end
 
