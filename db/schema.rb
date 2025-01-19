@@ -10,12 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_19_045815) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_19_085523) do
   create_table "followers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "follower_user_id"
     t.datetime "followed_at"
     t.boolean "is_active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["follower_user_id", "is_active", "followed_at"], name: "idx_on_follower_user_id_is_active_followed_at_069ff376d1", order: { followed_at: :desc }
+    t.index ["user_id", "follower_user_id", "is_active", "followed_at"], name: "idx_on_user_id_follower_user_id_is_active_followed__cf51449b65", order: { followed_at: :desc }
+  end
+
+  create_table "sleeps", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.datetime "start"
+    t.datetime "end"
+    t.bigint "duration_seconds"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
