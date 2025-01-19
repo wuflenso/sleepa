@@ -6,6 +6,10 @@ class Follower < ApplicationRecord
   CACHE_PREFIX_USER_FOLLOWERS = 'class_followers-followers-user_id:'.freeze
   CACHE_EXPIRY_USER_FOLLOWERS = 1.day
 
+  validates :user_id, presence: true
+  validates :follower_user_id, presence: true
+  validates :follower_user_id, comparison: { other_than: :user_id }
+
   after_save :invalidate_cache
 
   class << self

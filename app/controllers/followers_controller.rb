@@ -1,6 +1,7 @@
 class FollowersController < ApplicationController
   before_action :set_follower, only: %i[ show delete ]
   rescue_from StandardError, with: :handle_internal_server_error
+  rescue_from ActiveRecord::RecordInvalid, with: :handle_unprocessable_entity
 
   # GET /followers?user_id=:user_id
   # Get a user's follower list
@@ -48,5 +49,12 @@ class FollowersController < ApplicationController
       Rails.logger.error(error_log)
 
       render json: { error: 'Internal server error'}, status: :internal_server_error
+    end
+
+    def handle_unprocessable_entity(exception)
+      error_log = "Unprocessable Entity: #{exception.message}\nBacktrace:\n#{exception.backtrace.join("\n")}"
+      Rails.logger.error(error_log)
+
+      render json: { error: exception.message }, status: :unprocessable_entity
     end
 end
