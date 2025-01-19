@@ -7,15 +7,15 @@
 default: &default
   adapter: mysql2
   encoding: utf8
-  username: <%= ENV.fetch("MYSQL_USERNAME") { 'sleepa' } %>
-  password: <%= ENV.fetch("MYSQL_PASSWORD") { 'sleepa' } %>
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 10 } %>
-  host: <%= ENV.fetch('MYSQL_HOST') { '127.0.0.1' } %>
-  port: <%= ENV.fetch('MYSQL_PORT') { '3307' } %>
 
 development:
   <<: *default
-  database: sleepa_test
+  database: sleepa_dev
+  username: <%= ENV.fetch("MYSQL_USERNAME_DEV") { 'sleepa' } %>
+  password: <%= ENV.fetch("MYSQL_PASSWORD_DEV") { 'sleepa' } %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 10 } %>
+  host: <%= ENV.fetch('MYSQL_HOST_DEV') { '127.0.0.1' } %>
+  port: <%= ENV.fetch('MYSQL_PORT_DEV') { '3307' } %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -23,6 +23,11 @@ development:
 test:
   <<: *default
   database: sleepa_test
+  username: <%= ENV.fetch("MYSQL_USERNAME_TEST") { 'sleepa' } %>
+  password: <%= ENV.fetch("MYSQL_PASSWORD_TEST") { 'sleepa' } %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 10 } %>
+  host: <%= ENV.fetch('MYSQL_HOST_TEST') { '127.0.0.1' } %>
+  port: <%= ENV.fetch('MYSQL_PORT_TEST') { '3308' } %>
 
 
 # Store production database in the storage/ directory, which by default
@@ -31,3 +36,8 @@ production:
   primary:
     <<: *default
     database: sleepa_production
+    username: <%= ENV.fetch("MYSQL_USERNAME") { 'sleepa' } %>
+    password: <%= ENV.fetch("MYSQL_PASSWORD") { 'sleepa' } %>
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 10 } %>
+    host: <%= ENV.fetch('MYSQL_HOST') { '127.0.0.1' } %>
+    port: <%= ENV.fetch('MYSQL_PORT') { '3307' } %>
