@@ -20,9 +20,9 @@ class Sleep < ApplicationRecord
   end
 
   def update(params)
-    self.start = params.start
-    self.end = params.end
-    self.duration_seconds = params.end - params.start
+    self.start = params[:start]
+    self.end = params[:end]
+    self.duration_seconds = params[:end] - params[:start]
     self.save!
     self
   end
