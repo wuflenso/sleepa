@@ -17,7 +17,7 @@ module HandleControllerErrors
   end
 
   def handle_unprocessable_entity(exception)
-    render json: { error: exception.record.errors.full_messages }, status: :unprocessable_entity
+    render json: { error: exception.message }, status: :unprocessable_entity
   end
 
   def handle_not_found(exception)
