@@ -1,46 +1,59 @@
 class SleepsController < ApplicationController
-  before_action :set_sleep, only: %i[ show update destroy ]
+  rescue_from StandardError, with: :handle_internal_server_error
+  rescue_from ActiveRecord::RecordInvalid, with: :handle_unprocessable_entity
+  rescue_from ActiveRecord::RecordNotFound, with: :handle_not_found
+
+  before_action :set_sleep, only: %i[ show update delete ]
 
   # GET /sleeps
   def index
-    @sleeps = Sleep.all
-
-    render json: @sleeps
+    render json: Sleep.get_sleeps(params.expect(:user_id))
   end
 
   # GET /sleeps/1
   def show
-    render json: @sleep
+    return render json: @sleep unless @sleep.nil?
+    render json: { message: 'Record not found'}, status: :not_found
   end
 
   # POST /sleeps
   def create
-    @sleep = Sleep.new(sleep_params)
-
-    if @sleep.save
-      render json: @sleep, status: :created, location: @sleep
-    else
-      render json: @sleep.errors, status: :unprocessable_entity
-    end
+    render json: Sleep.clock_in(sleep_params), status: :created
   end
 
   # PATCH/PUT /sleeps/1
   def update
-    if @sleep.update(sleep_params)
+    render json: @sleep.update(sleep_params)
+  end
+
+  # DELETE /sleeps/1
+  def delete
+    if @sleep.delete
       render json: @sleep
-    else
-      render json: @sleep.errors, status: :unprocessable_entity
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_sleep
       @sleep = Sleep.find(params.expect(:id))
     end
 
-    # Only allow a list of trusted parameters through.
     def sleep_params
-      params.expect(sleep: [ :start, :end, :duration_seconds, :user_id ])
+      params.permit([ :start, :end, :user_id ])
+    end
+
+    def handle_internal_server_error(exception)
+      error_log = "Internal Server Error: #{exception.message}\nBacktrace:\n#{exception.backtrace.join("\n")}"
+      Rails.logger.error(error_log)
+
+      render json: { error: 'Internal server error'}, status: :internal_server_error
+    end
+
+    def handle_unprocessable_entity(exception)
+      render json: { error: exception.message }, status: :unprocessable_entity
+    end
+
+    def handle_not_found(exception)
+      render json: { error: "Record not found" }, status: :not_found
     end
 end
