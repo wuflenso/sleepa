@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_20_132407) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_21_143733) do
   create_table "followers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "follower_user_id"
@@ -30,6 +30,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_20_132407) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
+    t.index ["user_id", "deleted_at", "start", "duration_seconds"], name: "idx_on_user_id_deleted_at_start_duration_seconds_b976631d64", order: { duration_seconds: :desc }
+    t.index ["user_id", "deleted_at", "start"], name: "index_sleeps_on_user_id_and_deleted_at_and_start", order: { start: :desc }
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
