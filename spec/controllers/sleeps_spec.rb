@@ -79,7 +79,6 @@ RSpec.describe SleepsController, type: :controller do
   describe 'followings' do
     subject { get :followings, params: http_params }
 
-    let(:user_id) { 1 }
     let(:followings_user_ids) { [ 2, 3, 4, 5, 6 ] }
     let(:http_params) do
       {
