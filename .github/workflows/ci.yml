@@ -59,8 +59,14 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
+      - name: Run Rails bundle install
+        env:
+          RAILS_ENV: test
+          # REDIS_URL: redis://localhost:6379/0
+        run: bundle install
+      
       - name: Run tests
         env:
           RAILS_ENV: test
           # REDIS_URL: redis://localhost:6379/0
-        run: bin/rails db:test:prepare test
+        run: bundle exec rspec
