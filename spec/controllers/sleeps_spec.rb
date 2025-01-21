@@ -76,6 +76,50 @@ RSpec.describe SleepsController, type: :controller do
     end
   end
 
+  describe 'followings' do
+    subject { get :followings, params: http_params }
+
+    let(:user_id) { 1 }
+    let(:followings) do
+      [
+        Follower.new(user_id: 2, follower_user_id: user_id),
+        Follower.new(user_id: 3, follower_user_id: user_id),
+        Follower.new(user_id: 4, follower_user_id: user_id),
+        Follower.new(user_id: 5, follower_user_id: user_id),
+        Follower.new(user_id: 6, follower_user_id: user_id),
+      ]
+    end
+    let(:followings_user_ids) { [2, 3, 4, 5, 6,] }
+    let(:http_params) do
+      {
+        user_id: 1,
+      }
+    end
+
+    context 'when success' do
+      before do
+        allow(Follower).to receive(:get_user_followings).with(anything).and_return(followings)
+        allow(Sleep).to receive(:bulk_get_last_week_sleep_records).with(followings_user_ids).and_return([Sleep.new])
+      end
+
+      it 'success get sleeps and does not return error' do
+        expect{ subject }.not_to raise_error
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when encounter unexpected error' do
+      before do
+        allow(Follower).to receive(:get_user_followings).and_raise(StandardError)
+      end
+
+      it 'returns internal server error' do
+        subject
+        expect(response).to have_http_status(500)
+      end
+    end
+  end
+
   describe 'create' do
     subject { post :create, params: http_params }
 

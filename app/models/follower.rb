@@ -3,6 +3,8 @@ class Follower < ApplicationRecord
 
   CACHE_PREFIX_USER_FOLLOWINGS = 'class_followers-followings-user_id:'.freeze
   CACHE_EXPIRY_USER_FOLLOWINGS = 1.day
+  CACHE_PREFIX_USER_FOLLOWINGS_USER_IDS_ONLY = 'class_followers-followings_user_ids-user_id:'.freeze
+  CACHE_EXPIRY_USER_FOLLOWINGS_USER_IDS_ONLY = 1.day
   CACHE_PREFIX_USER_FOLLOWERS = 'class_followers-followers-user_id:'.freeze
   CACHE_EXPIRY_USER_FOLLOWERS = 1.day
 
@@ -21,7 +23,16 @@ class Follower < ApplicationRecord
 
     def get_user_followings(follower_user_id)
       Rails.cache.fetch("#{CACHE_PREFIX_USER_FOLLOWINGS}#{follower_user_id}", expires_in: CACHE_EXPIRY_USER_FOLLOWINGS) do
-        self.where(follower_user_id: follower_user_id).where(is_active: true)&.order(followed_at: "desc")
+        followings = self.where(follower_user_id: follower_user_id).where(is_active: true)&.order(followed_at: "desc")
+
+        Rails.cache.write("#{CACHE_PREFIX_USER_FOLLOWINGS_USER_IDS_ONLY}#{follower_user_id}", followings.pluck(:user_id), expires_in: CACHE_EXPIRY_USER_FOLLOWINGS_USER_IDS_ONLY)
+        followings
+      end
+    end
+
+    def get_followings_user_ids(follower_user_id)
+      Rails.cache.fetch("#{CACHE_PREFIX_USER_FOLLOWINGS_USER_IDS_ONLY}#{follower_user_id}", expires_in: CACHE_EXPIRY_USER_FOLLOWINGS_USER_IDS_ONLY) do
+        self.where(follower_user_id: follower_user_id).where(is_active: true)&.order(followed_at: "desc").pluck(:user_id)
       end
     end
 
@@ -49,7 +60,9 @@ class Follower < ApplicationRecord
   end
 
   def invalidate_cache
+    # maybe a transaction is better
     Rails.cache.delete("#{CACHE_PREFIX_USER_FOLLOWERS}#{self.user_id}")
     Rails.cache.delete("#{CACHE_PREFIX_USER_FOLLOWINGS}#{self.follower_user_id}")
+    Rails.cache.delete("#{CACHE_EXPIRY_USER_FOLLOWINGS_USER_IDS_ONLY}#{self.follower_user_id}")
   end
 end

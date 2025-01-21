@@ -44,6 +44,33 @@ RSpec.describe Sleep, type: :model do
         end
       end
     end
+
+    describe '.bulk_get_last_week_sleep_records' do
+      let(:followings_user_ids) { [ 2, 3, 4, 5, 6 ] }
+      let(:sleeps) { double('sleeps') }
+      let(:sleeps_active) { double('sleeps') }
+      let(:sleeps_unordered) { double('sleeps') }
+
+      context 'when query result is not empty' do
+        it 'success get followed users sleep records ordered' do
+          expect(Sleep).to receive(:where).with(user_id: followings_user_ids).and_return(sleeps)
+          expect(sleeps).to receive(:where).with(deleted_at: nil).and_return(sleeps_active)
+          expect(sleeps_active).to receive(:where).with(start: anything).and_return(sleeps_unordered)
+          expect(sleeps_unordered).to receive(:order).with(duration_seconds: 'desc').and_return([subject])
+
+          Sleep.bulk_get_last_week_sleep_records(followings_user_ids)
+        end
+      end
+
+      context 'when query returns nil' do
+        it 'success get followed users sleep records ordered' do
+          expect(Sleep).to receive(:where).with(user_id: followings_user_ids).and_return(nil)
+
+          results = Sleep.bulk_get_last_week_sleep_records(followings_user_ids)
+          expect(results).to eq([])
+        end
+      end
+    end
   end
 
   describe '.update' do
