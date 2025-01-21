@@ -1,11 +1,11 @@
 class Follower < ApplicationRecord
   belongs_to :user
 
-  CACHE_PREFIX_USER_FOLLOWINGS = 'class_followers-followings-user_id:'.freeze
+  CACHE_PREFIX_USER_FOLLOWINGS = "class_followers-followings-user_id:".freeze
   CACHE_EXPIRY_USER_FOLLOWINGS = 1.day
-  CACHE_PREFIX_USER_FOLLOWINGS_USER_IDS_ONLY = 'class_followers-followings_user_ids-user_id:'.freeze
+  CACHE_PREFIX_USER_FOLLOWINGS_USER_IDS_ONLY = "class_followers-followings_user_ids-user_id:".freeze
   CACHE_EXPIRY_USER_FOLLOWINGS_USER_IDS_ONLY = 1.day
-  CACHE_PREFIX_USER_FOLLOWERS = 'class_followers-followers-user_id:'.freeze
+  CACHE_PREFIX_USER_FOLLOWERS = "class_followers-followers-user_id:".freeze
   CACHE_EXPIRY_USER_FOLLOWERS = 1.day
 
   validates :user_id, presence: true

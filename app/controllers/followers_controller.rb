@@ -13,7 +13,7 @@ class FollowersController < ApplicationController
   # Get follower details
   def show
     return render json: @follower unless @follower.nil?
-    render json: { message: 'Record not found'}, status: :not_found
+    render json: { message: "Record not found" }, status: :not_found
   end
 
   # GET /followers/followings
@@ -48,7 +48,7 @@ class FollowersController < ApplicationController
       error_log = "Internal Server Error: #{exception.message}\nBacktrace:\n#{exception.backtrace.join("\n")}"
       Rails.logger.error(error_log)
 
-      render json: { error: 'Internal server error'}, status: :internal_server_error
+      render json: { error: "Internal server error" }, status: :internal_server_error
     end
 
     def handle_unprocessable_entity(exception)

@@ -13,7 +13,7 @@ module HandleControllerErrors
     error_log = "Internal Server Error: #{exception.message}\nBacktrace:\n#{exception.backtrace.join("\n")}"
     Rails.logger.error(error_log)
 
-    render json: { error: 'Internal server error'}, status: :internal_server_error
+    render json: { error: "Internal server error" }, status: :internal_server_error
   end
 
   def handle_unprocessable_entity(exception)

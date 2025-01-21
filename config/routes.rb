@@ -10,19 +10,19 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "rails/health#show"
 
-  scope '/api/v1' do
+  scope "/api/v1" do
     resources :users
 
-    resources :followers, path: 'followers', only: [:index] do
-      get  '/details' => 'followers#show', on: :collection
-      get  '/followings' => 'followers#followings', on: :collection
-      post  '/follow' => 'followers#create', on: :collection
-      delete  '/unfollow' => 'followers#delete', on: :collection
+    resources :followers, path: "followers", only: [ :index ] do
+      get  "/details" => "followers#show", on: :collection
+      get  "/followings" => "followers#followings", on: :collection
+      post "/follow" => "followers#create", on: :collection
+      delete "/unfollow" => "followers#delete", on: :collection
     end
 
-    resources :followers, path: 'sleeps', only: [:index, :show, :create] do
-      get  '/followings' => 'sleeps#followings', on: :collection
-      delete  '/delete' => 'sleeps#delete', on: :member
+    resources :followers, path: "sleeps", only: [ :index, :show, :create ] do
+      get "/followings" => "sleeps#followings", on: :collection
+      delete "/delete" => "sleeps#delete", on: :member
     end
   end
 end

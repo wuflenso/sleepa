@@ -11,7 +11,7 @@ class SleepsController < ApplicationController
   # GET /sleeps/1
   def show
     return render json: @sleep unless @sleep.nil?
-    render json: { message: 'Record not found'}, status: :not_found
+    render json: { message: "Record not found" }, status: :not_found
   end
 
   # GET /sleeps/followings?user_id=:user_id
