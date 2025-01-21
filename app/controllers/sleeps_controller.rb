@@ -16,7 +16,7 @@ class SleepsController < ApplicationController
 
   # GET /sleeps/followings?user_id=:user_id
   def followings
-    user_ids = Follower.get_user_followings(params.expect(:user_id))&.pluck(:user_id)
+    user_ids = Follower.get_followings_user_ids(params.expect(:user_id))
     sleeps = Sleep.bulk_get_last_week_sleep_records(user_ids)
     render json: sleeps
   end

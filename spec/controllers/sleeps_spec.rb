@@ -80,15 +80,6 @@ RSpec.describe SleepsController, type: :controller do
     subject { get :followings, params: http_params }
 
     let(:user_id) { 1 }
-    let(:followings) do
-      [
-        Follower.new(user_id: 2, follower_user_id: user_id),
-        Follower.new(user_id: 3, follower_user_id: user_id),
-        Follower.new(user_id: 4, follower_user_id: user_id),
-        Follower.new(user_id: 5, follower_user_id: user_id),
-        Follower.new(user_id: 6, follower_user_id: user_id),
-      ]
-    end
     let(:followings_user_ids) { [2, 3, 4, 5, 6,] }
     let(:http_params) do
       {
@@ -98,7 +89,7 @@ RSpec.describe SleepsController, type: :controller do
 
     context 'when success' do
       before do
-        allow(Follower).to receive(:get_user_followings).with(anything).and_return(followings)
+        allow(Follower).to receive(:get_followings_user_ids).with(anything).and_return(followings_user_ids)
         allow(Sleep).to receive(:bulk_get_last_week_sleep_records).with(followings_user_ids).and_return([Sleep.new])
       end
 
@@ -110,7 +101,7 @@ RSpec.describe SleepsController, type: :controller do
 
     context 'when encounter unexpected error' do
       before do
-        allow(Follower).to receive(:get_user_followings).and_raise(StandardError)
+        allow(Follower).to receive(:get_followings_user_ids).and_raise(StandardError)
       end
 
       it 'returns internal server error' do
