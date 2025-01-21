@@ -19,5 +19,10 @@ Rails.application.routes.draw do
       post  '/follow' => 'followers#create', on: :collection
       delete  '/unfollow' => 'followers#delete', on: :collection
     end
+
+    resources :followers, path: 'sleeps', only: [:index, :show, :create] do
+      get  '/followings' => 'sleeps#followings', on: :collection
+      delete  '/delete' => 'sleeps#delete', on: :member
+    end
   end
 end

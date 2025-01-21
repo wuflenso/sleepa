@@ -38,6 +38,28 @@ RSpec.describe Follower, type: :model do
       end
     end
 
+    context '.get_followings_user_ids' do
+      let(:followers) { double('followers') }
+      let(:followers_unordered) { double('followers') }
+      let(:followers_unplucked) do
+        [
+          Follower.new(user_id: 2, follower_user_id: 1),
+          Follower.new(user_id: 3, follower_user_id: 1),
+          Follower.new(user_id: 4, follower_user_id: 1),
+        ]
+      end
+      let(:expected_user_ids) { [ 2, 3, 4 ]}
+
+      it 'success get user followings' do
+        expect(Follower).to receive(:where).with(follower_user_id: follower_user_id).and_return(followers)
+        expect(followers).to receive(:where).with(is_active: true).and_return(followers_unordered)
+        expect(followers_unordered).to receive(:order).with(followed_at: 'desc').and_return(followers_unplucked)
+
+        result = Follower.get_followings_user_ids(follower_user_id)
+        expect(result).to eq(expected_user_ids)
+      end
+    end
+
     context '.get_follower_details' do
       let(:followers) { double('followers') }
       let(:followers_unfiltered) { double('followers') }

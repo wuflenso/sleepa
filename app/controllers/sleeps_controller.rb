@@ -1,46 +1,49 @@
 class SleepsController < ApplicationController
-  before_action :set_sleep, only: %i[ show update destroy ]
+  include HandleControllerErrors
+
+  before_action :set_sleep, only: %i[ show update delete ]
 
   # GET /sleeps
   def index
-    @sleeps = Sleep.all
-
-    render json: @sleeps
+    render json: Sleep.get_sleeps(params.expect(:user_id))
   end
 
   # GET /sleeps/1
   def show
-    render json: @sleep
+    return render json: @sleep unless @sleep.nil?
+    render json: { message: 'Record not found'}, status: :not_found
+  end
+
+  # GET /sleeps/followings?user_id=:user_id
+  def followings
+    user_ids = Follower.get_followings_user_ids(params.expect(:user_id))
+    sleeps = Sleep.bulk_get_last_week_sleep_records(user_ids)
+    render json: sleeps
   end
 
   # POST /sleeps
   def create
-    @sleep = Sleep.new(sleep_params)
-
-    if @sleep.save
-      render json: @sleep, status: :created, location: @sleep
-    else
-      render json: @sleep.errors, status: :unprocessable_entity
-    end
+    render json: Sleep.clock_in(sleep_params), status: :created
   end
 
   # PATCH/PUT /sleeps/1
   def update
-    if @sleep.update(sleep_params)
+    render json: @sleep.update(sleep_params)
+  end
+
+  # DELETE /sleeps/1
+  def delete
+    if @sleep.delete
       render json: @sleep
-    else
-      render json: @sleep.errors, status: :unprocessable_entity
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_sleep
-      @sleep = Sleep.find(params.expect(:id))
-    end
+  def set_sleep
+    @sleep = Sleep.find(params.expect(:id))
+  end
 
-    # Only allow a list of trusted parameters through.
-    def sleep_params
-      params.expect(sleep: [ :start, :end, :duration_seconds, :user_id ])
-    end
+  def sleep_params
+    params.permit([ :start, :end, :user_id ])
+  end
 end
