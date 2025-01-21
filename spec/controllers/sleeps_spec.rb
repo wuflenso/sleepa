@@ -6,17 +6,17 @@ RSpec.describe SleepsController, type: :controller do
 
     let(:http_params) do
       {
-        user_id: 1,
+        user_id: 1
       }
     end
 
     context 'when success' do
       before do
-        allow(Sleep).to receive(:get_sleeps).with(anything).and_return([Sleep.new])
+        allow(Sleep).to receive(:get_sleeps).with(anything).and_return([ Sleep.new ])
       end
 
       it 'success get sleeps and does not return error' do
-        expect{ subject }.not_to raise_error
+        expect { subject }.not_to raise_error
         expect(response).to have_http_status(200)
       end
     end
@@ -38,7 +38,7 @@ RSpec.describe SleepsController, type: :controller do
 
     let(:http_params) do
       {
-        id: 1,
+        id: 1
       }
     end
 
@@ -48,7 +48,7 @@ RSpec.describe SleepsController, type: :controller do
       end
 
       it 'success get sleep detail and does not return error' do
-        expect{ subject }.not_to raise_error
+        expect { subject }.not_to raise_error
         expect(response).to have_http_status(200)
       end
     end
@@ -80,21 +80,21 @@ RSpec.describe SleepsController, type: :controller do
     subject { get :followings, params: http_params }
 
     let(:user_id) { 1 }
-    let(:followings_user_ids) { [2, 3, 4, 5, 6,] }
+    let(:followings_user_ids) { [ 2, 3, 4, 5, 6 ] }
     let(:http_params) do
       {
-        user_id: 1,
+        user_id: 1
       }
     end
 
     context 'when success' do
       before do
         allow(Follower).to receive(:get_followings_user_ids).with(anything).and_return(followings_user_ids)
-        allow(Sleep).to receive(:bulk_get_last_week_sleep_records).with(followings_user_ids).and_return([Sleep.new])
+        allow(Sleep).to receive(:bulk_get_last_week_sleep_records).with(followings_user_ids).and_return([ Sleep.new ])
       end
 
       it 'success get sleeps and does not return error' do
-        expect{ subject }.not_to raise_error
+        expect { subject }.not_to raise_error
         expect(response).to have_http_status(200)
       end
     end
@@ -117,7 +117,7 @@ RSpec.describe SleepsController, type: :controller do
     let(:http_params) do
       {
         user_id: 1,
-        start: Time.new(2024, 1, 25, 22, 0, 0).in_time_zone('Jakarta'),
+        start: Time.new(2024, 1, 25, 22, 0, 0).in_time_zone('Jakarta')
       }
     end
 
@@ -127,7 +127,7 @@ RSpec.describe SleepsController, type: :controller do
       end
 
       it 'success create and does not return error' do
-        expect{ subject }.not_to raise_error
+        expect { subject }.not_to raise_error
         expect(response).to have_http_status(201)
       end
     end
@@ -177,7 +177,7 @@ RSpec.describe SleepsController, type: :controller do
       end
 
       it 'success update and does not return error' do
-        expect{ subject }.not_to raise_error
+        expect { subject }.not_to raise_error
         expect(response).to have_http_status(200)
       end
     end
@@ -199,7 +199,7 @@ RSpec.describe SleepsController, type: :controller do
 
     let(:http_params) do
       {
-        id: 1,
+        id: 1
       }
     end
 
@@ -213,7 +213,7 @@ RSpec.describe SleepsController, type: :controller do
       end
 
       it 'success delete and does not return error' do
-        expect{ subject }.not_to raise_error
+        expect { subject }.not_to raise_error
         expect(response).to have_http_status(200)
       end
     end

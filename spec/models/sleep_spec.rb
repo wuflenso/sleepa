@@ -19,7 +19,7 @@ RSpec.describe Sleep, type: :model do
       it 'success get sleeps' do
         expect(Sleep).to receive(:where).with(user_id: user_id).and_return(sleeps)
         expect(sleeps).to receive(:where).with(deleted_at: nil).and_return(sleeps_unordered)
-        expect(sleeps_unordered).to receive(:order).with(start: 'desc').and_return([subject])
+        expect(sleeps_unordered).to receive(:order).with(start: 'desc').and_return([ subject ])
 
         Sleep.get_sleeps(user_id)
       end
@@ -29,7 +29,7 @@ RSpec.describe Sleep, type: :model do
       let(:params) do
         {
           user_id: user_id,
-          start: start_time,
+          start: start_time
         }
       end
 
@@ -56,7 +56,7 @@ RSpec.describe Sleep, type: :model do
           expect(Sleep).to receive(:where).with(user_id: followings_user_ids).and_return(sleeps)
           expect(sleeps).to receive(:where).with(deleted_at: nil).and_return(sleeps_active)
           expect(sleeps_active).to receive(:where).with(start: anything).and_return(sleeps_unordered)
-          expect(sleeps_unordered).to receive(:order).with(duration_seconds: 'desc').and_return([subject])
+          expect(sleeps_unordered).to receive(:order).with(duration_seconds: 'desc').and_return([ subject ])
 
           Sleep.bulk_get_last_week_sleep_records(followings_user_ids)
         end
@@ -79,7 +79,7 @@ RSpec.describe Sleep, type: :model do
     let(:params) do
       {
         start: updated_start_time,
-        end: updated_end_time,
+        end: updated_end_time
       }
     end
 

@@ -6,17 +6,17 @@ RSpec.describe FollowersController, type: :controller do
 
     let(:http_params) do
       {
-        user_id: 1,
+        user_id: 1
       }
     end
 
     context 'when success' do
       before do
-        allow(Follower).to receive(:get_followers).with(anything).and_return([Follower.new])
+        allow(Follower).to receive(:get_followers).with(anything).and_return([ Follower.new ])
       end
 
       it 'success get followers and does not return error' do
-        expect{ subject }.not_to raise_error
+        expect { subject }.not_to raise_error
         expect(response).to have_http_status(200)
       end
     end
@@ -38,7 +38,7 @@ RSpec.describe FollowersController, type: :controller do
 
     let(:http_params) do
       {
-        id: 1,
+        id: 1
       }
     end
 
@@ -48,7 +48,7 @@ RSpec.describe FollowersController, type: :controller do
       end
 
       it 'success get follower detail and does not return error' do
-        expect{ subject }.not_to raise_error
+        expect { subject }.not_to raise_error
         expect(response).to have_http_status(200)
       end
     end
@@ -81,17 +81,17 @@ RSpec.describe FollowersController, type: :controller do
 
     let(:http_params) do
       {
-        user_id: 1,
+        user_id: 1
       }
     end
 
     context 'when success' do
       before do
-        allow(Follower).to receive(:get_user_followings).with(anything).and_return([Follower.new])
+        allow(Follower).to receive(:get_user_followings).with(anything).and_return([ Follower.new ])
       end
 
       it 'success get followings and does not return error' do
-        expect{ subject }.not_to raise_error
+        expect { subject }.not_to raise_error
         expect(response).to have_http_status(200)
       end
     end
@@ -114,7 +114,7 @@ RSpec.describe FollowersController, type: :controller do
     let(:http_params) do
       {
         user_id: 1,
-        follower_user_id: 2,
+        follower_user_id: 2
       }
     end
 
@@ -124,7 +124,7 @@ RSpec.describe FollowersController, type: :controller do
       end
 
       it 'success create and does not return error' do
-        expect{ subject }.not_to raise_error
+        expect { subject }.not_to raise_error
         expect(response).to have_http_status(201)
       end
     end
@@ -157,7 +157,7 @@ RSpec.describe FollowersController, type: :controller do
 
     let(:http_params) do
       {
-        id: 1,
+        id: 1
       }
     end
 
@@ -171,7 +171,7 @@ RSpec.describe FollowersController, type: :controller do
       end
 
       it 'success get follower detail and does not return error' do
-        expect{ subject }.not_to raise_error
+        expect { subject }.not_to raise_error
         expect(response).to have_http_status(200)
       end
     end

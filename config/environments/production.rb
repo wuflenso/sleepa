@@ -47,13 +47,13 @@ Rails.application.configure do
   config.active_support.report_deprecations = false
 
   # Replace the default in-process memory cache store with a durable alternative.
-  cache_servers = ENV.fetch('REDIS_HOSTS', %w(redis://127.0.0.1:6380/0))
+  cache_servers = ENV.fetch("REDIS_HOSTS", %w[redis://127.0.0.1:6380/0])
   config.cache_store = :redis_cache_store, {
     url: cache_servers,
-    connect_timeout:    ENV.fetch('REDIS_POOL_SIZE', 30)&.to_i,  # Defaults to 1 second
-    read_timeout:       ENV.fetch('REDIS_READ_TIMEOUT', 1)&.to_i, # Defaults to 1 second
-    write_timeout:      ENV.fetch('REDIS_WRITE_TIMEOUT', 1)&.to_i, # Defaults to 1 second
-    reconnect_attempts: ENV.fetch('REDIS_RECONNECT_ATTEMPTS', 1)&.to_i,   # Defaults to 1
+    connect_timeout:    ENV.fetch("REDIS_POOL_SIZE", 30)&.to_i,  # Defaults to 1 second
+    read_timeout:       ENV.fetch("REDIS_READ_TIMEOUT", 1)&.to_i, # Defaults to 1 second
+    write_timeout:      ENV.fetch("REDIS_WRITE_TIMEOUT", 1)&.to_i, # Defaults to 1 second
+    reconnect_attempts: ENV.fetch("REDIS_RECONNECT_ATTEMPTS", 1)&.to_i   # Defaults to 1
   }
 
   # Replace the default in-process and non-durable queuing backend for Active Job.

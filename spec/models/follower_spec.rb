@@ -45,10 +45,10 @@ RSpec.describe Follower, type: :model do
         [
           Follower.new(user_id: 2, follower_user_id: 1),
           Follower.new(user_id: 3, follower_user_id: 1),
-          Follower.new(user_id: 4, follower_user_id: 1),
+          Follower.new(user_id: 4, follower_user_id: 1)
         ]
       end
-      let(:expected_user_ids) { [ 2, 3, 4 ]}
+      let(:expected_user_ids) { [ 2, 3, 4 ] }
 
       it 'success get user followings' do
         expect(Follower).to receive(:where).with(follower_user_id: follower_user_id).and_return(followers)
@@ -67,7 +67,7 @@ RSpec.describe Follower, type: :model do
       it 'success get follower details' do
         expect(Follower).to receive(:where).with(user_id: user_id).and_return(followers)
         expect(followers).to receive(:where).with(follower_user_id: follower_user_id).and_return(followers_unfiltered)
-        expect(followers_unfiltered).to receive(:where).with(is_active: true).and_return([subject])
+        expect(followers_unfiltered).to receive(:where).with(is_active: true).and_return([ subject ])
 
         Follower.get_follower_details(user_id, follower_user_id)
       end
@@ -93,7 +93,7 @@ RSpec.describe Follower, type: :model do
       end
 
       it 'raise error' do
-        expect{ Follower.follow(user_id, follower_user_id) }.to raise_error(StandardError)
+        expect { Follower.follow(user_id, follower_user_id) }.to raise_error(StandardError)
       end
     end
   end
