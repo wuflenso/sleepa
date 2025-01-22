@@ -31,17 +31,6 @@ services:
     ports:
       - 6380:6379
     restart: always
-
-  elasticsearch-dev:
-    image: elasticsearch:8.16.2
-    environment:
-      - ELASTIC_PASSWORD=sleepa
-      - KIBANA_PASSWORD=sleepa
-      - STACK_VERSION=8.16.2
-      - ES_PORT=127.0.0.1:9200
-    ports:
-      - 9201:9200
-    restart: always
  
 volumes:
   mysql-dev-data:
