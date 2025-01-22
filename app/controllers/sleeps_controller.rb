@@ -10,8 +10,7 @@ class SleepsController < ApplicationController
 
   # GET /sleeps/1
   def show
-    return render json: @sleep unless @sleep.nil?
-    render json: { message: "Record not found" }, status: :not_found
+    render json: @sleep
   end
 
   # GET /sleeps/followings?user_id=:user_id
@@ -23,12 +22,12 @@ class SleepsController < ApplicationController
 
   # POST /sleeps
   def create
-    render json: Sleep.clock_in(sleep_params), status: :created
+    render json: Sleep.clock_in(create_sleep_params), status: :created
   end
 
   # PATCH/PUT /sleeps/1
   def update
-    render json: @sleep.update(sleep_params)
+    render json: @sleep.update(update_sleep_params)
   end
 
   # DELETE /sleeps/1
@@ -43,7 +42,11 @@ class SleepsController < ApplicationController
     @sleep = Sleep.find(params.expect(:id))
   end
 
-  def sleep_params
-    params.permit([ :start, :end, :user_id ])
+  def create_sleep_params
+    params.expect(:start, :end, :user_id)
+  end
+
+  def update_sleep_params
+    params.permit([ :start, :end ])
   end
 end
