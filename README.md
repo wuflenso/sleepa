@@ -3,7 +3,7 @@
 Sleepa is a backend service that clocks in your sleep history and share it with your friends.
 
 ## Ruby version
-3.2.2 — Rails version 7.2.2
+3.2.2 — Rails version 8.0.1
 
 ## System dependencies
 - MySQL 9.1.0
