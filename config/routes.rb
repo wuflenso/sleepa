@@ -20,7 +20,7 @@ Rails.application.routes.draw do
       delete "/unfollow" => "followers#delete", on: :collection
     end
 
-    resources :followers, path: "sleeps", only: [ :index, :show, :create ] do
+    resources :sleeps, path: "sleeps", only: [ :index, :show, :create ] do
       get "/followings" => "sleeps#followings", on: :collection
       delete "/delete" => "sleeps#delete", on: :member
     end
