@@ -17,6 +17,7 @@ class Follower < ApplicationRecord
   class << self
     def paginated(relation, limit, offset)
       total = relation.count
+      items = relation
       items = relation.offset(offset).limit(limit) if offset && limit
       [ items, total ]
     end

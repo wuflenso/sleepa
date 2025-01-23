@@ -12,6 +12,22 @@ RSpec.describe Sleep, type: :model do
   end
 
   describe 'class methods' do
+    context '.paginated' do
+      let(:relation) { double }
+      let(:relation_offset) { double }
+
+      before do
+        allow(relation).to receive(:count).and_return(2)
+        allow(relation).to receive(:offset).and_return(relation_offset)
+        allow(relation_offset).to receive(:limit).and_return(relation)
+      end
+
+      it 'success get followers' do
+        response = Sleep.paginated(relation, 10, 0)
+        expect(response).to eq([ relation, 2 ])
+      end
+    end
+
     describe '.get_sleeps' do
       let(:sleeps) { double('sleeps') }
       let(:sleeps_unordered) { double('sleeps') }
@@ -74,8 +90,8 @@ RSpec.describe Sleep, type: :model do
   end
 
   describe '.update' do
-    let(:updated_start_time) { Time.new(2023, 1, 25, 22, 0, 0).in_time_zone('Jakarta') }
-    let(:updated_end_time) { Time.new(2023, 1, 26, 5, 0, 0).in_time_zone('Jakarta') }
+    let(:updated_start_time) { "2023-01-25T22:00:00+0700" }
+    let(:updated_end_time) { "2023-01-26T05:00:00+0700" }
     let(:params) do
       {
         start: updated_start_time,

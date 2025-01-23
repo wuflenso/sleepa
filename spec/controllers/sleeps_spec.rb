@@ -11,8 +11,11 @@ RSpec.describe SleepsController, type: :controller do
     end
 
     context 'when success' do
+      let(:relation_sleep) { double('sleep') }
+
       before do
-        allow(Sleep).to receive(:get_sleeps).with(anything).and_return([ Sleep.new ])
+        allow(Sleep).to receive(:get_sleeps).with(anything).and_return(relation_sleep)
+        allow(Sleep).to receive(:paginated).with(relation_sleep, anything, anything).and_return([ Sleep.new ], 1)
       end
 
       it 'success get sleeps and does not return error' do
@@ -80,6 +83,7 @@ RSpec.describe SleepsController, type: :controller do
     subject { get :followings, params: http_params }
 
     let(:followings_user_ids) { [ 2, 3, 4, 5, 6 ] }
+    let(:relation_sleep) { double('sleep') }
     let(:http_params) do
       {
         user_id: 1
@@ -89,7 +93,8 @@ RSpec.describe SleepsController, type: :controller do
     context 'when success' do
       before do
         allow(Follower).to receive(:get_followings_user_ids).with(anything).and_return(followings_user_ids)
-        allow(Sleep).to receive(:bulk_get_last_week_sleep_records).with(followings_user_ids).and_return([ Sleep.new ])
+        allow(Sleep).to receive(:bulk_get_last_week_sleep_records).with(followings_user_ids).and_return(relation_sleep)
+        allow(Sleep).to receive(:paginated).with(relation_sleep, anything, anything).and_return([ Sleep.new ], 1)
       end
 
       it 'success get sleeps and does not return error' do
