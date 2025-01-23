@@ -11,8 +11,11 @@ RSpec.describe FollowersController, type: :controller do
     end
 
     context 'when success' do
+      let(:relation_followers) { double('followers') }
+
       before do
-        allow(Follower).to receive(:get_followers).with(anything).and_return([ Follower.new ])
+        allow(Follower).to receive(:get_followers).with(anything).and_return(relation_followers)
+        allow(Follower).to receive(:paginated).with(relation_followers, anything, anything).and_return([ Follower.new ], 1)
       end
 
       it 'success get followers and does not return error' do
@@ -86,8 +89,11 @@ RSpec.describe FollowersController, type: :controller do
     end
 
     context 'when success' do
+      let(:relation_followers) { double('followers') }
+
       before do
-        allow(Follower).to receive(:get_user_followings).with(anything).and_return([ Follower.new ])
+        allow(Follower).to receive(:get_user_followings).with(anything).and_return(relation_followers)
+        allow(Follower).to receive(:paginated).with(relation_followers, anything, anything).and_return([ Follower.new ], 1)
       end
 
       it 'success get followings and does not return error' do

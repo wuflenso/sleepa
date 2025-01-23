@@ -12,6 +12,22 @@ RSpec.describe Follower, type: :model do
   end
 
   describe 'class methods' do
+    context '.paginated' do
+      let(:relation) { double }
+      let(:relation_offset) { double }
+
+      before do
+        allow(relation).to receive(:count).and_return(2)
+        allow(relation).to receive(:offset).and_return(relation_offset)
+        allow(relation_offset).to receive(:limit).and_return(relation)
+      end
+
+      it 'success get followers' do
+        response = Follower.paginated(relation, 10, 0)
+        expect(response).to eq([ relation, 2 ])
+      end
+    end
+
     context '.get_followers' do
       let(:followers) { double('followers') }
       let(:followers_unordered) { double('followers') }
