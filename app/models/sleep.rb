@@ -3,9 +3,17 @@ class Sleep < ApplicationRecord
 
   validates :user_id, presence: true
   validates :duration_seconds, presence: true
-  validates :end, comparison: { greater_than: :start }
+  validates :start, presence: true
+  validates :end, presence: true, comparison: { greater_than: :start }
 
   class << self
+    def paginated(relation, limit, offset)
+      total = relation.count
+      items = relation
+      items = relation.offset(offset).limit(limit) if offset && limit
+      [ items, total ]
+    end
+
     def get_sleeps(user_id)
       self.where(user_id: user_id).where(deleted_at: nil)&.order(start: "desc")
     end
@@ -27,9 +35,9 @@ class Sleep < ApplicationRecord
   end
 
   def update(params)
-    self.start = params[:start]
-    self.end = params[:end]
-    self.duration_seconds = params[:end] - params[:start]
+    self.start = Time.zone.parse(params[:start]) unless params[:start].nil?
+    self.end = Time.zone.parse(params[:end]) unless params[:end].nil?
+    self.duration_seconds = self.end - self.start
     self.save!
     self
   end
