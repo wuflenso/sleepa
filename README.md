@@ -26,3 +26,6 @@ For testing purpose in `development` environment:
 
 ### Run Service
 `RAILS_ENV=development rails server`
+
+### Testing APIs
+See sample curls in [Sample Curls Documentation](docs/sample_curls.md).

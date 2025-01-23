@@ -6,7 +6,7 @@ class FollowersController < ApplicationController
   before_action :set_follower, only: %i[ show delete ]
 
   # GET /followers?user_id=:user_id
-  # Get a user's follower list
+  # List followers
   def index
     params = index_params
     relation = Follower.get_followers(params[:user_id])
@@ -15,13 +15,13 @@ class FollowersController < ApplicationController
   end
 
   # GET /followers/:id
-  # Get follower details
+  # Show followership details
   def show
     render json: build_success_response(@follower)
   end
 
   # GET /followers/followings?user_id=:user_id
-  # Get a user's following list
+  # List followed users
   def followings
     params = followings_params
     relation = Follower.get_user_followings(params[:user_id])
