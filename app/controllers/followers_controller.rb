@@ -28,7 +28,7 @@ class FollowersController < ApplicationController
   # follower_user_id bigint
   def create
     params = create_params
-    render json: Follower.follow(params[:user_id], params[:follower_user_id]), status: :created
+    render json: Follower.follow(params[:user_id].to_i, params[:follower_user_id].to_i), status: :created
   end
 
   # DELETE /followers/unfollow/:id
@@ -45,6 +45,9 @@ class FollowersController < ApplicationController
     end
 
     def create_params
-      params.expect(:user_id, :follower_user_id)
+      {
+        user_id: params.expect(:user_id),
+        follower_user_id: params.expect(:follower_user_id)
+      }
     end
 end

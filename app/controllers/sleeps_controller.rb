@@ -43,7 +43,7 @@ class SleepsController < ApplicationController
   end
 
   def create_sleep_params
-    params.expect(:start, :end, :user_id)
+    params.permit([:start, :end, :user_id])
   end
 
   def update_sleep_params
