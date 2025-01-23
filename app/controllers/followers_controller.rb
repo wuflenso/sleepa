@@ -2,6 +2,7 @@ class FollowersController < ApplicationController
   include ControllerResponseBuilder
   include HandleControllerErrors
 
+  wrap_parameters false
   before_action :set_follower, only: %i[ show delete ]
 
   # GET /followers?user_id=:user_id
