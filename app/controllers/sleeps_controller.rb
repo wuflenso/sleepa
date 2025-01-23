@@ -6,6 +6,7 @@ class SleepsController < ApplicationController
   before_action :set_sleep, only: %i[ show update delete ]
 
   # GET /sleeps
+  # List a user's sleep records
   def index
     params = index_params
     relation = Sleep.get_sleeps(params[:user_id])
@@ -14,12 +15,13 @@ class SleepsController < ApplicationController
   end
 
   # GET /sleeps/:id
-  # Show sleep detail
+  # Show sleep details
   def show
     render json: build_success_response(@sleep)
   end
 
   # GET /sleeps/followings?user_id=:user_id
+  # List followed users' sleep records
   def followings
     params = followings_params
     user_ids = Follower.get_followings_user_ids(params[:user_id])
@@ -29,12 +31,14 @@ class SleepsController < ApplicationController
   end
 
   # POST /sleeps
+  # Clock in sleep
   def create
     response = Sleep.clock_in(create_sleep_params)
     render json: build_success_response(response), status: :created
   end
 
   # PATCH /sleeps/1
+  # Update sleep
   def update
     response = @sleep.update(update_sleep_params)
     render json: build_success_response(response)
