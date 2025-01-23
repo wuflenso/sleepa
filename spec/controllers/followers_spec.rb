@@ -11,8 +11,11 @@ RSpec.describe FollowersController, type: :controller do
     end
 
     context 'when success' do
+      let(:relation_followers) { double('followers') }
+
       before do
-        allow(Follower).to receive(:get_followers).with(anything).and_return([ Follower.new ])
+        allow(Follower).to receive(:get_followers).with(anything).and_return(relation_followers)
+        allow(Follower).to receive(:paginated).with(relation_followers, anything, anything).and_return([ Follower.new ], 1)
       end
 
       it 'success get followers and does not return error' do
@@ -23,7 +26,7 @@ RSpec.describe FollowersController, type: :controller do
 
     context 'when encounter unexpected error' do
       before do
-        allow(Follower).to receive(:get_followers).and_raise(StandardError)
+        allow(Follower).to receive(:get_followers).and_raise(ActiveRecord::ConnectionNotEstablished)
       end
 
       it 'returns internal server error' do
@@ -44,7 +47,7 @@ RSpec.describe FollowersController, type: :controller do
 
     context 'when success' do
       before do
-        allow(Follower).to receive(:find_by_id).with(anything).and_return(Follower.new)
+        allow(Follower).to receive(:find).with(anything).and_return(Follower.new)
       end
 
       it 'success get follower detail and does not return error' do
@@ -55,7 +58,7 @@ RSpec.describe FollowersController, type: :controller do
 
     context 'when record is not found' do
       before do
-        allow(Follower).to receive(:find_by_id).with(anything).and_return(nil)
+        allow(Follower).to receive(:find).with(anything).and_raise(ActiveRecord::RecordNotFound)
       end
 
       it 'returns not found' do
@@ -66,7 +69,7 @@ RSpec.describe FollowersController, type: :controller do
 
     context 'when encounter unexpected error' do
       before do
-        allow(Follower).to receive(:find_by_id).and_raise(StandardError)
+        allow(Follower).to receive(:find).and_raise(ActiveRecord::ConnectionNotEstablished)
       end
 
       it 'returns internal server error' do
@@ -86,8 +89,11 @@ RSpec.describe FollowersController, type: :controller do
     end
 
     context 'when success' do
+      let(:relation_followers) { double('followers') }
+
       before do
-        allow(Follower).to receive(:get_user_followings).with(anything).and_return([ Follower.new ])
+        allow(Follower).to receive(:get_user_followings).with(anything).and_return(relation_followers)
+        allow(Follower).to receive(:paginated).with(relation_followers, anything, anything).and_return([ Follower.new ], 1)
       end
 
       it 'success get followings and does not return error' do
@@ -98,7 +104,7 @@ RSpec.describe FollowersController, type: :controller do
 
     context 'when encounter unexpected error' do
       before do
-        allow(Follower).to receive(:get_user_followings).and_raise(StandardError)
+        allow(Follower).to receive(:get_user_followings).and_raise(ActiveRecord::ConnectionNotEstablished)
       end
 
       it 'returns internal server error' do
@@ -142,7 +148,7 @@ RSpec.describe FollowersController, type: :controller do
 
     context 'when encounter unexpected error' do
       before do
-        allow(Follower).to receive(:follow).with(anything, anything).and_raise(StandardError)
+        allow(Follower).to receive(:follow).with(anything, anything).and_raise(ActiveRecord::ConnectionNotEstablished)
       end
 
       it 'returns internal server error' do
@@ -162,7 +168,7 @@ RSpec.describe FollowersController, type: :controller do
     end
 
     before do
-      allow(Follower).to receive(:find_by_id).with(anything).and_return(Follower.new)
+      allow(Follower).to receive(:find).with(anything).and_return(Follower.new)
     end
 
     context 'when success' do
@@ -178,7 +184,7 @@ RSpec.describe FollowersController, type: :controller do
 
     context 'when encounter unexpected error' do
       before do
-        allow_any_instance_of(Follower).to receive(:unfollow).and_raise(StandardError)
+        allow_any_instance_of(Follower).to receive(:unfollow).and_raise(ActiveRecord::ConnectionNotEstablished)
       end
 
       it 'returns internal server error' do

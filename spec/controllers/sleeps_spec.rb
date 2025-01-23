@@ -23,7 +23,7 @@ RSpec.describe SleepsController, type: :controller do
 
     context 'when encounter unexpected error' do
       before do
-        allow(Sleep).to receive(:get_sleeps).and_raise(StandardError)
+        allow(Sleep).to receive(:get_sleeps).and_raise(ActiveRecord::ConnectionNotEstablished)
       end
 
       it 'returns internal server error' do
@@ -66,7 +66,7 @@ RSpec.describe SleepsController, type: :controller do
 
     context 'when encounter unexpected error' do
       before do
-        allow(Sleep).to receive(:find).and_raise(StandardError)
+        allow(Sleep).to receive(:find).and_raise(ActiveRecord::ConnectionNotEstablished)
       end
 
       it 'returns internal server error' do
@@ -100,7 +100,7 @@ RSpec.describe SleepsController, type: :controller do
 
     context 'when encounter unexpected error' do
       before do
-        allow(Follower).to receive(:get_followings_user_ids).and_raise(StandardError)
+        allow(Follower).to receive(:get_followings_user_ids).and_raise(ActiveRecord::ConnectionNotEstablished)
       end
 
       it 'returns internal server error' do
@@ -133,7 +133,7 @@ RSpec.describe SleepsController, type: :controller do
 
     context 'when encounter record invalid error' do
       before do
-        allow(Sleep).to receive(:clock_in).with(anything).and_raise(ActiveRecord::RecordInvalid)
+        allow(Sleep).to receive(:create).with(anything).and_raise(ActiveRecord::RecordInvalid)
       end
 
       it 'return unprocessable entity error' do
@@ -144,7 +144,7 @@ RSpec.describe SleepsController, type: :controller do
 
     context 'when encounter unexpected error' do
       before do
-        allow(Sleep).to receive(:clock_in).with(anything).and_raise(StandardError)
+        allow(Sleep).to receive(:clock_in).with(anything).and_raise(ActiveRecord::ConnectionNotEstablished)
       end
 
       it 'returns internal server error' do
@@ -183,7 +183,7 @@ RSpec.describe SleepsController, type: :controller do
 
     context 'when encounter unexpected error' do
       before do
-        allow_any_instance_of(Sleep).to receive(:update).and_raise(StandardError)
+        allow_any_instance_of(Sleep).to receive(:update).and_raise(ActiveRecord::ConnectionNotEstablished)
       end
 
       it 'returns internal server error' do
@@ -219,7 +219,7 @@ RSpec.describe SleepsController, type: :controller do
 
     context 'when encounter unexpected error' do
       before do
-        allow_any_instance_of(Sleep).to receive(:delete).and_raise(StandardError)
+        allow_any_instance_of(Sleep).to receive(:delete).and_raise(ActiveRecord::ConnectionNotEstablished)
       end
 
       it 'returns internal server error' do

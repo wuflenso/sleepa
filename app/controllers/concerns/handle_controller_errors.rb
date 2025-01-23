@@ -2,9 +2,9 @@ module HandleControllerErrors
   extend ActiveSupport::Concern
 
   included do
-    rescue_from StandardError, with: :handle_internal_server_error
     rescue_from ActiveRecord::RecordInvalid, with: :handle_unprocessable_entity
     rescue_from ActiveRecord::RecordNotFound, with: :handle_not_found
+    rescue_from ActiveRecord::ConnectionNotEstablished, with: :handle_internal_server_error # might need to narrow down
   end
 
   private

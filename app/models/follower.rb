@@ -15,6 +15,12 @@ class Follower < ApplicationRecord
   after_save :invalidate_cache
 
   class << self
+    def paginated(relation, limit, offset)
+      total = relation.count
+      items = relation.offset(offset).limit(limit) if offset && limit
+      [ items, total ]
+    end
+
     def get_followers(user_id)
       Rails.cache.fetch("#{CACHE_PREFIX_USER_FOLLOWERS}#{user_id}", expires_in: CACHE_EXPIRY_USER_FOLLOWERS) do
         self.where(user_id: user_id).where(is_active: true)&.order(followed_at: "desc")

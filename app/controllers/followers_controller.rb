@@ -1,4 +1,5 @@
 class FollowersController < ApplicationController
+  include ControllerResponseBuilder
   include HandleControllerErrors
 
   before_action :set_follower, only: %i[ show delete ]
@@ -6,45 +7,73 @@ class FollowersController < ApplicationController
   # GET /followers?user_id=:user_id
   # Get a user's follower list
   def index
-    render json: Follower.get_followers(params.expect(:user_id))
+    params = index_params
+    relation = Follower.get_followers(params[:user_id])
+    response = Follower.paginated(relation, params[:limit], params[:offset])
+    render json: build_paginated_success_response(response)
   end
 
   # GET /followers/details?id=:id
   # Get follower details
   def show
-    render json: @follower
+    render json: build_success_response(@follower)
   end
 
-  # GET /followers/followings
+  # GET /followers/followings?user_id=:user_id
   # Get a user's following list
   def followings
-    render json: Follower.get_user_followings(params.expect(:user_id))
+    params = followings_params
+    relation = Follower.get_user_followings(params[:user_id])
+    response = Follower.paginated(relation, params[:limit], params[:offset])
+    render json: build_paginated_success_response(response)
   end
 
   # POST /followers/follow
   # Follow a user
-  # Request body params:
-  # user_id bigint
-  # follower_user_id bigint
+  # Request Body
+  # {
+  #   user_id: 1,
+  #   follower_user_id: 2
+  # }
   def create
     params = create_params
-    render json: Follower.follow(params[:user_id], params[:follower_user_id]), status: :created
+    response = Follower.follow(params[:user_id].to_i, params[:follower_user_id].to_i)
+    render json: build_success_response(response), status: :created
   end
 
-  # DELETE /followers/unfollow/:id
+  # DELETE /followers/unfollow?id=:id
   # Unfollow a user
   def delete
     if @follower.unfollow
-      render json: @follower
+      render json: build_success_response(@follower)
     end
   end
 
   private
-    def set_follower
-      @follower = Follower.find(params.expect(:id))
-    end
+  def set_follower
+    @follower = Follower.find(params.expect(:id))
+  end
 
-    def create_params
-      params.expect(:user_id, :follower_user_id)
+  def create_params
+    {
+      user_id: params.expect(:user_id),
+      follower_user_id: params.expect(:follower_user_id)
+    }
+  end
+
+  def index_params
+    params.require(:user_id)
+    params.permit(:user_id, :limit, :offset).tap do |param|
+      param[:limit] ||= 10
+      param[:offset] ||= 0
     end
+  end
+
+  def followings_params
+    params.require(:user_id)
+    params.permit(:user_id, :limit, :offset).tap do |param|
+      param[:limit] ||= 10
+      param[:offset] ||= 0
+    end
+  end
 end
