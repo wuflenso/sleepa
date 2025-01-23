@@ -14,7 +14,7 @@ class FollowersController < ApplicationController
     render json: build_paginated_success_response(response)
   end
 
-  # GET /followers/details?id=:id
+  # GET /followers/:id
   # Get follower details
   def show
     render json: build_success_response(@follower)
@@ -42,7 +42,7 @@ class FollowersController < ApplicationController
     render json: build_success_response(response), status: :created
   end
 
-  # DELETE /followers/unfollow?id=:id
+  # DELETE /followers/:id/unfollow
   # Unfollow a user
   def delete
     if @follower.unfollow
