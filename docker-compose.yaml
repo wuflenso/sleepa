@@ -35,8 +35,6 @@ services:
   elasticsearch-dev:
     image: elasticsearch:8.16.2
     environment:
-      - ELASTIC_PASSWORD=sleepa
-      - KIBANA_PASSWORD=sleepa
       - discovery.type=single-node
       - xpack.security.enabled=false
       - xpack.security.http.ssl.enabled=false
@@ -50,8 +48,6 @@ services:
     image: kibana:8.16.3
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch-dev:9200
-      - ELASTICSEARCH_USERNAME=kibana_system
-      - ELASTICSEARCH_PASSWORD=sleepa
       - SERVER_SSL_ENABLED=false
       - XPACK_REPORTING_ENABLED=false
     ports:
