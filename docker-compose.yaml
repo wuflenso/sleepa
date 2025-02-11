@@ -31,7 +31,36 @@ services:
     ports:
       - 6380:6379
     restart: always
+
+  elasticsearch-dev:
+    image: elasticsearch:8.16.2
+    environment:
+      - ELASTIC_PASSWORD=sleepa
+      - KIBANA_PASSWORD=sleepa
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+    ports:
+      - 9201:9200
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    restart: always
+
+  kibana-dev:
+    image: kibana:8.16.3
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch-dev:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=sleepa
+      - SERVER_SSL_ENABLED=false
+      - XPACK_REPORTING_ENABLED=false
+    ports:
+      - 5602:5601
+    restart: always
+    depends_on:
+      - elasticsearch-dev
  
 volumes:
   mysql-dev-data:
   mysql-test-data:
+  es-data:
